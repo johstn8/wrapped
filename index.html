@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#0f1225" />
+    <meta name="theme-color" content="#08080d" />
     <title>Friendship Wrapped</title>
     <meta
       name="description"
@@ -31,29 +31,18 @@
       </div>
 
       <main class="screen screen--home" id="homeScreen">
-        <section class="hero hero--home">
-          <div class="hero__glow"></div>
+        <section class="home-intro">
           <p class="eyebrow">Friendship Wrapped</p>
-          <h1>Johann × Julian</h1>
-          <p class="hero__copy" id="homeSummary">
-            Eure Daten werden geladen …
-          </p>
-          <div class="hero__actions">
-            <button class="primary-button" id="playAllButton" type="button">
-              Von vorn starten
-            </button>
-          </div>
+          <p class="home-intro__label">A private year in friendship</p>
+          <p class="hero__copy" id="homeSummary">Eure Daten werden geladen …</p>
+          <button class="secondary-button" id="playAllButton" type="button">Start from intro</button>
         </section>
 
-        <section class="stories-panel glass">
+        <section class="stories-panel">
           <div class="stories-panel__head">
-            <div>
-              <p class="eyebrow eyebrow--muted">Story-Bereiche</p>
-              <h2>Tippe auf eine Bubble</h2>
-            </div>
-            <p class="stories-panel__hint">Links = zurück · Rechts = weiter</p>
+            <p class="eyebrow eyebrow--muted">Chapters</p>
+            <p class="stories-panel__hint">Tap links/rechts · Swipe aktiv</p>
           </div>
-
           <div class="story-grid" id="storyGrid"></div>
         </section>
       </main>
@@ -63,16 +52,12 @@
         <div class="story-player__chrome">
           <div class="progress-bars" id="progressBars"></div>
           <header class="player-header">
-            <button class="icon-button" type="button" id="closePlayerButton" aria-label="Zur Startseite zurück">
-              ✕
-            </button>
             <div class="player-header__meta">
               <p class="player-header__eyebrow" id="playerEyebrow">Story</p>
               <h2 id="playerTitle">Titel</h2>
             </div>
-            <button class="icon-button" type="button" id="pauseButton" aria-label="Story pausieren oder fortsetzen">
-              ❚❚
-            </button>
+            <p class="player-counter" id="playerCounter">1 / 1</p>
+            <button class="icon-button" type="button" id="closePlayerButton" aria-label="Zur Startseite zurück">✕</button>
           </header>
         </div>
 
@@ -82,15 +67,9 @@
           <button class="tap-zone tap-zone--right" id="tapRight" aria-label="Nächste Karte"></button>
         </div>
 
-        <footer class="player-footer glass">
-          <div>
-            <p class="player-footer__label">Story-Fortschritt</p>
-            <p class="player-footer__value" id="playerCounter">1 / 1</p>
-          </div>
-          <div class="player-footer__actions">
-            <button class="secondary-button" type="button" id="prevStoryButton">Vorige Story</button>
-            <button class="secondary-button" type="button" id="nextStoryButton">Nächste Story</button>
-          </div>
+        <footer class="player-footer">
+          <button class="inline-link-button" type="button" id="prevStoryButton">Vorige Story</button>
+          <button class="inline-link-button" type="button" id="nextStoryButton">Nächste Story</button>
         </footer>
       </section>
 
@@ -106,9 +85,7 @@
         <div class="error-card glass">
           <p class="eyebrow eyebrow--muted">Fehler beim Laden</p>
           <h2>Die JSON konnte nicht geladen werden.</h2>
-          <p>
-            Prüfe bitte, ob <code>data/friendship_wrapped_data.json</code> im Repository liegt und ob die Seite über GitHub Pages oder einen lokalen Server läuft.
-          </p>
+          <p>Prüfe bitte, ob <code>data/friendship_wrapped_data.json</code> im Repository liegt und ob die Seite über GitHub Pages oder einen lokalen Server läuft.</p>
         </div>
       </section>
     </div>
