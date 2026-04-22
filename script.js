@@ -271,9 +271,13 @@ function buildStories(data) {
   const topicRace = buildTopicRace(data.topic_superlatives || []);
   const eraRace = buildEraRace(data.friendship_eras || []);
 
-  const flashbacks = ['FB1', 'FB3', 'FB4', 'FB5', 'FB6']
-    .map((id) => buildFlashbackScene(data, id))
+  const flashbacks = (data.flashbacks || [])
+    .slice()
+    .sort((a, b) => new Date(String(a.date_start || '').replace(' ', 'T')) - new Date(String(b.date_start || '').replace(' ', 'T')))
+    .map((row) => buildFlashbackScene(data, row.flashback_id))
     .filter(Boolean);
+  const flashbackIndex = new Map(flashbacks.map((scene) => [scene.id, scene]));
+  const chatBonusSlides = buildChatBonusSlides(flashbackIndex);
 
   const quizSlides = buildQuizSlides(data);
   const wrmDivisions = buildDivisionCounts(data.wrm_division_life || []);
@@ -316,6 +320,7 @@ function buildStories(data) {
         claimSlide('Chat', 'Wochentag mit dem meisten Druck', weekdayDe(strongestWeekday?.weekday || 'Monday'), `${formatNumber(strongestWeekday?.messages || 4411)} Nachrichten insgesamt — genau da lief es am stärksten.`),
         sessionSpotlightSlide('Chat', 'Session-Moment', topSession, 'Der längste zusammenhängende Marathon im Datensatz.'),
         sessionSpotlightSlide('Chat', 'Noch ein Moment', secondSession, 'Eine dieser Nächte, in denen plötzlich alles gleichzeitig wichtig war.'),
+        ...chatBonusSlides,
         ...flashbacks.map((scene) => flashbackSceneSlide(scene)),
       ],
     },
@@ -685,7 +690,11 @@ function quizQuestionSlide(question) {
 }
 
 function buildQuizSlides(data) {
-  const quotes = (data.quote_answers || []).filter((row) => ['Q1', 'Q2', 'Q3', 'Q4', 'Q5', 'Q7', 'Q10'].includes(row.quote_id));
+  const quoteOrder = (data.quote_game || []).map((row) => row.quote_id);
+  const quoteById = new Map((data.quote_answers || []).map((row) => [row.quote_id, row]));
+  const quotes = quoteOrder
+    .map((id) => quoteById.get(id))
+    .filter(Boolean);
   const quoteSlides = quotes.map((row) => quizQuestionSlide({
     id: row.quote_id,
     title: 'Wer hat das geschrieben?',
@@ -699,16 +708,16 @@ function buildQuizSlides(data) {
     note: translateQuizNote(row.note),
   }));
 
-  const wrmRows = (data.wrm_notes_quiz || []).slice(0, 3);
+  const wrmRows = data.wrm_notes_quiz || [];
   const wrmAnswers = new Map((data.wrm_notes_quiz_answers || []).map((row) => [row[0], row]));
-  const wrmOptionSets = [
-    ['WRM 23', 'WRM 51', 'WRM 75'],
-    ['WRM 12', 'WRM 39', 'WRM 68'],
-    ['WRM 27', 'WRM 44', 'WRM 82'],
-  ];
   const wrmSlides = wrmRows.map((row, index) => {
     const correct = wrmAnswers.get(row[0])?.[1] || row[4];
-    const baseOptions = wrmOptionSets[index] || wrmOptionSets[wrmOptionSets.length - 1];
+    const correctNum = Number(String(correct).replace(/\D/g, '')) || (index + 1) * 10;
+    const baseOptions = [
+      `WRM ${Math.max(1, correctNum - 11)}`,
+      `WRM ${Math.max(1, correctNum + 7)}`,
+      `WRM ${Math.max(1, correctNum + 19)}`,
+    ];
     const withCorrect = baseOptions.includes(correct) ? baseOptions : [correct, ...baseOptions.slice(0, 2)];
     const options = withCorrect.map((label) => ({ label, correct: label === correct }));
     return quizQuestionSlide({
@@ -814,10 +823,28 @@ function buildFlashbackScene(data, flashbackId) {
   if (!messages.length) return null;
 
   return {
+    id: flashbackId,
     date: formatDateTime(meta.date_start),
     note: meta.why_it_is_fun,
     messages,
   };
+}
+
+function buildChatBonusSlides(flashbackIndex) {
+  const bonusDefinitions = [
+    ['FB7', 'Lob-Explosion des Jahres', 'Wenn Noten reinkamen, ging das Pushen sofort auf 110 %.'],
+    ['FB8', 'Business-Idee des Jahres', 'Aus einer kuriosen Mail wurde in Minuten Manifest + Harvard + Lebenslauf.'],
+    ['FB9', 'Blauer-Haken-Prophezeiung', 'Vom „losten Account“ direkt zur Vision mit blauem Haken.'],
+    ['FB10', 'Namenskrise des Jahres', 'Hype, Vibe, Fallout — und komplette Entscheidungsüberforderung.'],
+  ];
+
+  return bonusDefinitions
+    .map(([id, title, claim]) => {
+      const scene = flashbackIndex.get(id);
+      if (!scene) return null;
+      return claimSlide('Chat Bonus', title, claim, `Flashback: ${scene.date}`);
+    })
+    .filter(Boolean);
 }
 
 function fxLayer() {
