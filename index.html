@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f1225" />
+    <title>Friendship Wrapped</title>
+    <meta
+      name="description"
+      content="Ein privates Friendship Wrapped im Story-Stil – aus Chat-, WRM- und Projekt-Daten als mobile, statische Website für GitHub Pages."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app app--loading">
+      <div class="orientation-guard" id="orientationGuard" aria-hidden="true">
+        <div class="orientation-card glass">
+          <div class="rotate-device" aria-hidden="true">
+            <div class="rotate-device__phone"></div>
+            <div class="rotate-device__arrow">↺</div>
+          </div>
+          <h2>Bitte im Hochformat öffnen</h2>
+          <p>Dieses Wrapped ist als vertikale Story-Erfahrung gebaut.</p>
+        </div>
+      </div>
+
+      <main class="screen screen--home" id="homeScreen">
+        <section class="hero hero--home">
+          <div class="hero__glow"></div>
+          <p class="eyebrow">Friendship Wrapped</p>
+          <h1>Johann × Julian</h1>
+          <p class="hero__copy" id="homeSummary">
+            Eure Daten werden geladen …
+          </p>
+          <div class="hero__actions">
+            <button class="primary-button" id="playAllButton" type="button">
+              Von vorn starten
+            </button>
+          </div>
+        </section>
+
+        <section class="stories-panel glass">
+          <div class="stories-panel__head">
+            <div>
+              <p class="eyebrow eyebrow--muted">Story-Bereiche</p>
+              <h2>Tippe auf eine Bubble</h2>
+            </div>
+            <p class="stories-panel__hint">Links = zurück · Rechts = weiter</p>
+          </div>
+
+          <div class="story-grid" id="storyGrid"></div>
+        </section>
+      </main>
+
+      <section class="story-player hidden" id="storyPlayer" aria-live="polite">
+        <div class="story-player__bg"></div>
+        <div class="story-player__chrome">
+          <div class="progress-bars" id="progressBars"></div>
+          <header class="player-header">
+            <button class="icon-button" type="button" id="closePlayerButton" aria-label="Zur Startseite zurück">
+              ✕
+            </button>
+            <div class="player-header__meta">
+              <p class="player-header__eyebrow" id="playerEyebrow">Story</p>
+              <h2 id="playerTitle">Titel</h2>
+            </div>
+            <button class="icon-button" type="button" id="pauseButton" aria-label="Story pausieren oder fortsetzen">
+              ❚❚
+            </button>
+          </header>
+        </div>
+
+        <div class="story-frame" id="storyFrame">
+          <div class="story-slide" id="storySlide"></div>
+          <button class="tap-zone tap-zone--left" id="tapLeft" aria-label="Vorherige Karte"></button>
+          <button class="tap-zone tap-zone--right" id="tapRight" aria-label="Nächste Karte"></button>
+        </div>
+
+        <footer class="player-footer glass">
+          <div>
+            <p class="player-footer__label">Story-Fortschritt</p>
+            <p class="player-footer__value" id="playerCounter">1 / 1</p>
+          </div>
+          <div class="player-footer__actions">
+            <button class="secondary-button" type="button" id="prevStoryButton">Vorige Story</button>
+            <button class="secondary-button" type="button" id="nextStoryButton">Nächste Story</button>
+          </div>
+        </footer>
+      </section>
+
+      <section class="screen screen--loading" id="loadingScreen">
+        <div class="loader-card glass">
+          <div class="loader-orb"></div>
+          <p class="eyebrow">Loading story engine</p>
+          <h2>Die Daten werden inszeniert …</h2>
+        </div>
+      </section>
+
+      <section class="screen screen--error hidden" id="errorScreen">
+        <div class="error-card glass">
+          <p class="eyebrow eyebrow--muted">Fehler beim Laden</p>
+          <h2>Die JSON konnte nicht geladen werden.</h2>
+          <p>
+            Prüfe bitte, ob <code>data/friendship_wrapped_data.json</code> im Repository liegt und ob die Seite über GitHub Pages oder einen lokalen Server läuft.
+          </p>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
