@@ -41,7 +41,6 @@ function cacheElements() {
   els.homeScreen = document.getElementById('homeScreen');
   els.homeSummary = document.getElementById('homeSummary');
   els.storyGrid = document.getElementById('storyGrid');
-  els.playAllButton = document.getElementById('playAllButton');
   els.storyPlayer = document.getElementById('storyPlayer');
   els.progressBars = document.getElementById('progressBars');
   els.playerTitle = document.getElementById('playerTitle');
@@ -58,7 +57,6 @@ function cacheElements() {
 }
 
 function bindUI() {
-  els.playAllButton.addEventListener('click', () => openStory(0, 0));
   els.closePlayerButton.addEventListener('click', closeStoryPlayer);
   els.tapLeft.addEventListener('click', previousSlide);
   els.tapRight.addEventListener('click', nextSlide);
@@ -153,19 +151,20 @@ function getActiveStory() {
 }
 
 function renderHome() {
-  const data = state.data;
-  els.homeSummary.textContent = `${formatNumber(data.summary.total_messages)} Nachrichten, ${data.summary.active_days} aktive Tage, ${data.wrm_overview?.[1]?.[1] || '91'} WRMs — und irgendwo dazwischen wurde aus Chat ein Betriebssystem.`;
+  els.homeSummary.textContent = 'Kuratiert in Kapitel-Momenten mit Motion-Reveals.';
 
   els.storyGrid.innerHTML = state.stories.map((story) => `
-    <button class="story-bubble" data-story-id="${story.id}" data-theme="${story.theme}" type="button" aria-label="${story.title} öffnen">
+    <button class="story-bubble chapter-shell" data-story-id="${story.id}" data-theme="${story.theme}" data-style="${story.homeStyle || ''}" type="button" aria-label="${story.title} öffnen">
       <div class="story-bubble__ring">
         <div class="story-bubble__inner">
-          <div class="story-bubble__count">${story.icon}</div>
+          <div class="fx fx--halo"></div>
+          <div class="fx fx--ribbon"></div>
+          <div class="orb-badge">${story.homeBadge || story.icon}</div>
+          ${story.homeOrbText ? `<div class="story-bubble__orbtext">${story.homeOrbText}</div>` : ''}
         </div>
       </div>
       <div class="story-bubble__title">${story.title}</div>
-      <div class="story-bubble__preview">${story.homePreview || ''}</div>
-      <div class="story-bubble__meta">${story.homeSubline || ''}</div>
+      ${story.homeCaption ? `<div class="orb-caption">${story.homeCaption}</div>` : ''}
     </button>
   `).join('');
 }
@@ -186,7 +185,28 @@ function renderActiveStory() {
   `).join('');
 
   els.storySlide.innerHTML = slide.html;
+  activateRevealSequence();
   syncProgressBars(1);
+}
+
+function activateRevealSequence() {
+  const revealNodes = [...els.storySlide.querySelectorAll('.reveal')];
+  if (!revealNodes.length) return;
+
+  revealNodes.forEach((node) => node.classList.remove('is-visible'));
+
+  if (state.prefersReducedMotion) {
+    revealNodes.forEach((node) => node.classList.add('is-visible'));
+    return;
+  }
+
+  requestAnimationFrame(() => {
+    revealNodes.forEach((node, index) => {
+      const step = Number(node.dataset.revealStep || index);
+      const delay = Number(node.dataset.revealDelay || step * 110);
+      window.setTimeout(() => node.classList.add('is-visible'), delay);
+    });
+  });
 }
 
 function syncProgressBars(currentProgress = 1) {
@@ -261,6 +281,7 @@ function handleFlashbackPaging(button) {
   state.flashbackPointer[flashbackId] = nextPage;
   slideNode.querySelector('[data-flashback-page]').textContent = `${nextPage + 1} / ${totalPages}`;
   slideNode.querySelector('[data-flashback-messages]').innerHTML = renderFlashbackMessagePage(messages, nextPage);
+  activateRevealSequence();
 }
 
 function buildStories(data) {
@@ -309,8 +330,9 @@ function buildStories(data) {
       kicker: 'Start',
       icon: '◉',
       theme: 'ember',
-      homePreview: totalMessages,
-      homeSubline: 'messages',
+      homeOrbText: 'OPEN',
+      homeCaption: 'intro',
+      homeBadge: '◉',
       slides: [
         renderClaimSlide({ kicker: 'Friendship Wrapped', title: 'A private year in friendship', body: '26.260 messages. 91 WRMs. One operating system.' }),
         renderHeroStatSlide({ kicker: 'Total volume', number: totalMessages, label: 'Nachrichten insgesamt', body: `${summary.active_days || 957} aktive Tage.` }),
@@ -326,8 +348,9 @@ function buildStories(data) {
       kicker: 'Intensity',
       icon: '⬤',
       theme: 'cobalt',
-      homePreview: `${summary.active_days || 957} Tage`,
-      homeSubline: 'full density',
+      homeOrbText: totalMessages,
+      homeCaption: 'messages',
+      homeBadge: '◍',
       slides: [
         renderHeroStatSlide({ kicker: 'Biggest day', number: formatNumber(topDay.messages || 0), label: formatDate(topDay.date), body: `${topDay.dominant_topic || 'Peak topic'} · ${(topDay.duration_hours || 0).toFixed(1)}h aktiv.` }),
         renderClaimSlide({ kicker: 'Strongest month', title: strongestMonthLabel, body: `${formatNumber(monthlyPeak.total_messages || 0)} Nachrichten in einem Monat.` }),
@@ -344,8 +367,9 @@ function buildStories(data) {
       kicker: 'Language',
       icon: '✦',
       theme: 'neon',
-      homePreview: '#1 Wort',
-      homeSubline: wordsTop[0]?.word || 'inside language',
+      homeOrbText: '#1',
+      homeCaption: 'language',
+      homeBadge: '✦',
       slides: [
         renderHeroStatSlide({ kicker: 'Top word', number: wordsTop[0]?.word || 'bro', label: `${formatNumber(wordsTop[0]?.count || 0)} Treffer`, body: 'Euer Signature-Vokabular in einem Wort.' }),
         renderTopRankSlide({ kicker: 'Top 5 words', title: 'Language board', rows: wordsTop.map((row) => ({ label: row.word, value: formatNumber(row.count) })) }),
@@ -363,8 +387,9 @@ function buildStories(data) {
       kicker: 'Phases',
       icon: '◌',
       theme: 'violet',
-      homePreview: `${eras.length || 4} Phasen`,
-      homeSubline: 'phase shift',
+      homeOrbText: String(eras.length || 4).padStart(2, '0'),
+      homeCaption: 'phases',
+      homeBadge: '◌',
       slides: [
         renderClaimSlide({ kicker: 'Phase intro', title: 'Every era had its own energy.', body: 'Setup → Leistung → System → Außenwirkung.' }),
         renderTimelineSlide({ theme: 'violet', kicker: 'Friendship eras', title: 'Topic evolution', body: 'Die Timeline zeigt klare Wechsel.', items: eras.map((era) => ({ range: `${era.start_month} → ${era.end_month}`, title: era.era_label, body: `${formatNumber(era.messages_in_era || 0)} messages` })) }),
@@ -380,14 +405,12 @@ function buildStories(data) {
       kicker: 'Memory',
       icon: '◐',
       theme: 'gold',
-      homePreview: `${flashbacks.length} Fenster`,
-      homeSubline: 'nostalgic scenes',
+      homeOrbText: '✦',
+      homeCaption: 'memory',
+      homeBadge: '◐',
       slides: [
-        renderFlashbackIntroSlide({ kicker: 'Flashbacks', title: 'Kurze Erinnerungsfenster', body: 'Keine Dumps, nur kuratierte Szenen.' }),
-        ...flashbacks.flatMap((flashback) => [
-          renderFlashbackIntroSlide({ kicker: flashback.title, title: flashback.title, body: flashback.why_it_is_fun || 'Moment captured.' }),
-          renderFlashbackMessageSlide({ theme: 'gold', kicker: 'Scene', title: flashback.title, body: `${formatDateTime(flashback.date_start)} → ${formatDateTime(flashback.date_end)}`, flashbackId: flashback.flashback_id, dateRange: 'Flashback' }),
-        ]),
+        renderFlashbackIntroSlide({ kicker: 'Flashbacks', title: 'Memory windows', body: 'Direkt in die Szene.' }),
+        ...flashbacks.map((flashback) => renderFlashbackMessageSlide({ theme: 'gold', kicker: flashback.title, title: flashback.why_it_is_fun || 'Memory', body: `${formatDateTime(flashback.date_start)} → ${formatDateTime(flashback.date_end)}`, flashbackId: flashback.flashback_id, dateRange: 'Flashback' })),
       ],
     },
     {
@@ -396,8 +419,9 @@ function buildStories(data) {
       kicker: 'Interactive',
       icon: 'Q',
       theme: 'coral',
-      homePreview: 'QUIZ',
-      homeSubline: 'guess who / wrm',
+      homeOrbText: 'QUIZ',
+      homeCaption: 'play',
+      homeBadge: '?',
       slides: [
         renderQuizSlide({ kicker: 'QUIZ', title: 'Wer hat das geschrieben?', body: 'Round 1', quizId: quoteGame[0]?.id || 'q1', options: ['Johann', 'Julian RR'], answer: quoteGame[0]?.answer || 'Johann', quote: quoteGame[0]?.quote || '...' }),
         renderQuizRevealSlide({ kicker: 'Reveal', title: quoteGame[0]?.answer || 'Johann', body: quoteGame[0]?.note || '' }),
@@ -415,8 +439,9 @@ function buildStories(data) {
       kicker: 'Operating system',
       icon: '◈',
       theme: 'plum',
-      homePreview: `${wrmCount} WRMs`,
-      homeSubline: 'weekly reset',
+      homeOrbText: wrmCount,
+      homeCaption: 'weekly resets',
+      homeBadge: '◈',
       slides: [
         renderClaimSlide({ kicker: 'WRM claim', title: 'At some point this became a weekly operating system.', body: '' }),
         renderHeroStatSlide({ kicker: 'WRM count', number: wrmCount, label: 'dokumentierte WRMs', body: wrmNumbers['WRM time span'] || '' }),
@@ -435,8 +460,9 @@ function buildStories(data) {
       kicker: 'Close',
       icon: '◎',
       theme: 'ember',
-      homePreview: 'The system',
-      homeSubline: 'final poster',
+      homeOrbText: 'END',
+      homeCaption: 'poster',
+      homeBadge: '◎',
       slides: [
         renderClaimSlide({ kicker: 'Finale', title: 'From chat to system', body: 'A friendship with rhythm, ambition and structure.' }),
         renderFinaleSlide({ kicker: 'Synthesis', headline: `${totalMessages} + ${wrmCount} + ${summary.longest_streak_days || 169}`, subline: 'messages + WRMs + longest streak', statement: 'One operating system.' }),
@@ -457,13 +483,14 @@ function renderClaimSlide({ kicker, title, body }) {
 function renderTopRankSlide({ kicker, title, rows = [] }) {
   return {
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner">
-        <p class="story-kicker">${escapeHtml(kicker)}</p>
-        <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-slide--rank story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div><div class="fx fx--ribbon reveal reveal--2"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+        <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
         <div class="rank-list">
           ${rows.slice(0, 5).map((row, index) => `
-            <article class="rank-item rank-item--${index === 0 ? 'top' : 'rest'}">
+            <article class="rank-item rank-item--${index === 0 ? 'top' : 'rest'} reveal reveal-stagger" data-reveal-step="${index + 3}">
               <div class="rank-item__index">#${index + 1}</div>
               <div class="rank-item__label">${escapeHtml(row.label || '')}</div>
               <div class="rank-item__value">${escapeHtml(row.value || '')}</div>
@@ -479,12 +506,13 @@ function renderTopRankSlide({ kicker, title, rows = [] }) {
 function renderIdentitySlide({ kicker, title, chips = [], body = '' }) {
   return {
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center">
-        <p class="story-kicker">${escapeHtml(kicker)}</p>
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-layout--center story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div><div class="fx fx--ribbon reveal reveal--2"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
         <h3 class="story-title">${escapeHtml(title)}</h3>
         <div class="chip-row">${chips.map((chip) => `<span class="chip">${escapeHtml(chip)}</span>`).join('')}</div>
-        <p class="story-lead">${escapeHtml(body)}</p>
+        <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
       </div>
     `,
   };
@@ -498,10 +526,11 @@ function renderQuizRevealSlide({ kicker, title, body }) {
   return {
     html: `
       <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center quiz-reveal">
-        <p class="story-kicker">${escapeHtml(kicker)}</p>
+      <div class="story-slide__inner story-layout--center quiz-reveal story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
         <div class="hero-number">${escapeHtml(title === 'Julian RR' ? 'Julian' : title)}</div>
-        <p class="story-lead">${escapeHtml(body)}</p>
+        <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
       </div>
     `,
   };
@@ -524,7 +553,7 @@ function renderFinaleSlide({ kicker, headline, subline, statement }) {
     html: `
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner story-layout--center finale-slide">
-        <p class="story-kicker">${escapeHtml(kicker)}</p>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
         <div class="hero-number">${escapeHtml(headline)}</div>
         <p class="hero-label">${escapeHtml(subline)}</p>
         <h3 class="story-title story-title--medium">${escapeHtml(statement)}</h3>
@@ -538,12 +567,13 @@ function createCoverSlide({ theme, kicker, title, body, tags = [] }) {
     theme,
     duration: 7200,
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center">
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-layout--center story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div><div class="fx fx--ribbon reveal reveal--2"></div>
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
           <h3 class="story-title">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="story-slide__bottom">
           <div class="chip-row">
@@ -561,13 +591,14 @@ function createBigNumberSlide({ theme, kicker, number, label, body, stats = [] }
     theme,
     duration: 7200,
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center">
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-layout--center story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div><div class="fx fx--ribbon reveal reveal--2"></div>
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <div class="hero-number">${escapeHtml(number)}</div>
-          <p class="hero-label">${escapeHtml(label)}</p>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <div class="hero-number reveal reveal-pop reveal--3">${escapeHtml(number)}</div>
+          <p class="hero-label reveal reveal--4">${escapeHtml(label)}</p>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="story-slide__bottom">
           <div class="chip-row">
@@ -587,9 +618,9 @@ function createMetricGridSlide({ theme, kicker, title, body, metrics = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="metric-grid">
           ${metrics.map((metric) => `
@@ -613,9 +644,9 @@ function createChartSlide({ theme, kicker, title, body, svg, labels = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="sparkline-wrap">
           ${svg}
@@ -635,9 +666,9 @@ function createBarsSlide({ theme, kicker, title, body, bars = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="bar-list">
           ${bars.map((bar) => `
@@ -663,9 +694,9 @@ function createComparisonSlide({ theme, kicker, title, body, left, right, footer
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="duo-grid">
           ${[left, right].map((card) => `
@@ -690,9 +721,9 @@ function createCardsSlide({ theme, kicker, title, body, cards = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="story-card-grid">
           ${cards.map((card) => `
@@ -716,9 +747,9 @@ function createCloudSlide({ theme, kicker, title, body, words = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="pill-cloud">
           ${words.map((word) => `
@@ -738,9 +769,9 @@ function createTimelineSlide({ theme, kicker, title, body, items = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="timeline">
           ${items.map((item) => `
@@ -764,9 +795,9 @@ function createNoteListSlide({ theme, kicker, title, body, notes = [], footnote 
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="note-list">
           ${notes.map((note) => `<div class="note-pill">${escapeHtml(note)}</div>`).join('')}
@@ -796,9 +827,9 @@ function createDivisionSlide({ theme, kicker, title, body, divisions = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="story-card" style="display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;">
           <div style="width:120px;height:120px;border-radius:50%;background:conic-gradient(${stops.join(',')});padding:14px;box-shadow:inset 0 0 0 1px rgba(255,255,255,.12);">
@@ -828,9 +859,9 @@ function createCoreTaskSlide({ theme, kicker, title, body, cards = [] }) {
       <div class="story-slide__bg"></div>
       <div class="story-slide__inner">
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         <div class="card-stack">
           ${cards.map((card) => `
@@ -856,23 +887,19 @@ function createFlashbackSlide({ theme, kicker, title, body, flashbackId, dateRan
     theme,
     interactive: true,
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner" data-flashback-id="${escapeHtml(flashbackId)}">
-        <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-slide--flashback story-slide--cinematic" data-flashback-id="${escapeHtml(flashbackId)}">
+        <div class="fx fx--halo reveal reveal--1"></div>
+        <div class="fx fx--ribbon reveal reveal--2"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+        <p class="flashback-card__meta reveal reveal--3">${escapeHtml(dateRange)} · ${escapeHtml(body)}</p>
+        <div class="flashback-chat" data-flashback-messages>
+          ${renderFlashbackMessagePage(chunks, 0)}
         </div>
-        <div class="flashback-card">
-          <p class="flashback-card__meta">${escapeHtml(dateRange)}</p>
-          <div class="flashback-chat" data-flashback-messages>
-            ${renderFlashbackMessagePage(chunks, 0)}
-          </div>
-          <div class="flashback-controls">
-            <button type="button" class="flashback-button" data-flashback-action="prev" data-flashback-id="${escapeHtml(flashbackId)}">Zurück</button>
-            <button type="button" class="flashback-button" data-flashback-action="next" data-flashback-id="${escapeHtml(flashbackId)}">Weiter</button>
-          </div>
-          <p class="story-footer-note">Seite <span data-flashback-page>1 / ${Math.ceil(chunks.length / 3) || 1}</span></p>
+        <div class="flashback-controls reveal reveal--6">
+          <button type="button" class="flashback-button" data-flashback-action="prev" data-flashback-id="${escapeHtml(flashbackId)}">Zurück</button>
+          <p class="story-footer-note"><span data-flashback-page>1 / ${Math.ceil(chunks.length / 3) || 1}</span></p>
+          <button type="button" class="flashback-button" data-flashback-action="next" data-flashback-id="${escapeHtml(flashbackId)}">Weiter</button>
         </div>
       </div>
     `,
@@ -906,18 +933,19 @@ function createQuizBase({ theme, kicker, title, body, quizId, options, answer, e
     theme,
     interactive: true,
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner" data-quiz-id="${escapeHtml(quizId)}">
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-slide--minimal story-slide--cinematic" data-quiz-id="${escapeHtml(quizId)}">
+        <div class="fx fx--halo reveal reveal--1"></div>
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
-          <h3 class="story-title story-title--medium">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+          <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
           ${extraHtml}
         </div>
         <div class="choice-grid">
           ${options.map((option) => `
             <button
-              class="choice-button"
+              class="choice-button reveal reveal-up" data-reveal-step="4"
               type="button"
               data-quiz-group="${escapeHtml(quizId)}"
               data-value="${escapeHtml(option)}"
@@ -939,12 +967,13 @@ function createStatementSlide({ theme, kicker, title, body, actionLabel = 'Repla
     theme,
     duration: 7600,
     html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center">
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-layout--center story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div><div class="fx fx--ribbon reveal reveal--2"></div>
         <div class="story-slide__top">
-          <p class="story-kicker">${escapeHtml(kicker)}</p>
+          <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
           <h3 class="story-title">${escapeHtml(title)}</h3>
-          <p class="story-lead">${escapeHtml(body)}</p>
+          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
         </div>
         ${showAction ? `<div class="story-slide__bottom">
           <div class="chip-row">
@@ -968,8 +997,8 @@ function getFlashbackChunks(flashbackId) {
 
 function renderFlashbackMessagePage(messages, page) {
   const start = page * 3;
-  return messages.slice(start, start + 3).map((message) => `
-    <div class="chat-bubble ${message.self ? 'chat-bubble--self' : 'chat-bubble--other'}">
+  return messages.slice(start, start + 3).map((message, index) => `
+    <div class="chat-bubble ${message.self ? 'chat-bubble--self' : 'chat-bubble--other'} reveal reveal-stagger" data-reveal-step="${index + 3}">
       <span class="chat-bubble__sender">${escapeHtml(message.sender === 'Julian RR' ? 'Julian' : 'Johann')}</span>
       ${escapeHtml(message.message)}
     </div>
