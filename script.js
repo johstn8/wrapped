@@ -49,6 +49,8 @@ function cacheElements() {
   els.closePlayerButton = document.getElementById('closePlayerButton');
   els.storyFrame = document.getElementById('storyFrame');
   els.storySlide = document.getElementById('storySlide');
+  els.storyNavLeft = document.getElementById('storyNavLeft');
+  els.storyNavRight = document.getElementById('storyNavRight');
   els.orientationGuard = document.getElementById('orientationGuard');
   els.loadingScreen = document.getElementById('loadingScreen');
   els.errorScreen = document.getElementById('errorScreen');
@@ -57,7 +59,8 @@ function cacheElements() {
 function bindUI() {
   els.storyGrid.addEventListener('click', onStoryGridClick);
   els.closePlayerButton.addEventListener('click', closeStoryPlayer);
-  els.storyFrame.addEventListener('click', onStoryFrameClick);
+  els.storyNavLeft.addEventListener('click', previousSlide);
+  els.storyNavRight.addEventListener('click', nextSlide);
   els.storySlide.addEventListener('click', onSlideInteraction);
 
   els.storyFrame.addEventListener('touchstart', (event) => {
@@ -95,17 +98,6 @@ function onStoryGridClick(event) {
   const storyIndex = Number(bubble.dataset.storyIndex);
   if (Number.isNaN(storyIndex)) return;
   openStory(storyIndex, 0);
-}
-
-function onStoryFrameClick(event) {
-  if (event.target.closest('[data-no-nav]')) return;
-  const rect = els.storyFrame.getBoundingClientRect();
-  const x = event.clientX - rect.left;
-  if (x < rect.width * 0.34) {
-    previousSlide();
-  } else if (x > rect.width * 0.66) {
-    nextSlide();
-  }
 }
 
 function onSlideInteraction(event) {
@@ -655,6 +647,7 @@ function birthdaySlide(title, support) {
 }
 
 function quizQuestionSlide(question) {
+  const promptClass = question.promptStyle === 'quote' ? 'quiz-prompt quiz-prompt--quote' : 'quiz-prompt';
   return {
     kind: 'quiz',
     html: `
@@ -662,7 +655,7 @@ function quizQuestionSlide(question) {
         ${fxLayer()}
         <p class="kicker reveal" data-delay="80">QUIZ</p>
         <p class="slide-title reveal" data-delay="150">${escapeHtml(question.title)}</p>
-        <div class="quiz-prompt reveal" data-delay="240">${escapeHtml(question.prompt)}</div>
+        <div class="${promptClass} reveal" data-delay="240">${escapeHtml(question.prompt)}</div>
         <div class="quiz-options">
           ${question.options.map((option, index) => `
             <button
@@ -674,7 +667,9 @@ function quizQuestionSlide(question) {
               data-quiz-correct="${String(option.correct)}"
               aria-pressed="false"
             >
-              ${escapeHtml(option.label)}
+              <span class="quiz-option__checkbox" aria-hidden="true"></span>
+              <span class="quiz-option__bullet" aria-hidden="true">•</span>
+              <span class="quiz-option__label">${escapeHtml(option.label)}</span>
             </button>
           `).join('')}
         </div>
@@ -693,6 +688,7 @@ function buildQuizSlides(data) {
     id: row.quote_id,
     title: 'Wer hat das geschrieben?',
     prompt: row.quote,
+    promptStyle: 'quote',
     options: [
       { label: 'Julian', correct: row.true_sender === 'Julian RR' },
       { label: 'Johann', correct: row.true_sender === 'johann' },
@@ -703,10 +699,16 @@ function buildQuizSlides(data) {
 
   const wrmRows = (data.wrm_notes_quiz || []).slice(0, 3);
   const wrmAnswers = new Map((data.wrm_notes_quiz_answers || []).map((row) => [row[0], row]));
+  const wrmOptionSets = [
+    ['WRM 23', 'WRM 51', 'WRM 75'],
+    ['WRM 12', 'WRM 39', 'WRM 68'],
+    ['WRM 27', 'WRM 44', 'WRM 82'],
+  ];
   const wrmSlides = wrmRows.map((row, index) => {
     const correct = wrmAnswers.get(row[0])?.[1] || row[4];
-    const allOptions = ['WRM 23', 'WRM 51', 'WRM 75'];
-    const options = allOptions.map((label) => ({ label, correct: label === correct }));
+    const baseOptions = wrmOptionSets[index] || wrmOptionSets[wrmOptionSets.length - 1];
+    const withCorrect = baseOptions.includes(correct) ? baseOptions : [correct, ...baseOptions.slice(0, 2)];
+    const options = withCorrect.map((label) => ({ label, correct: label === correct }));
     return quizQuestionSlide({
       id: `wrm-${index + 1}`,
       title: 'Welche WRM-Nummer war das?',
