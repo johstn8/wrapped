@@ -485,18 +485,20 @@ function raceSlide(kicker, title, intro, items) {
         <p class="kicker reveal" data-delay="80">${escapeHtml(kicker)}</p>
         <p class="slide-title reveal" data-delay="160">${escapeHtml(title)}</p>
         <p class="support-copy support-copy--tight reveal" data-delay="240">${escapeHtml(intro)}</p>
-        <div class="race-list">
+        <div class="race-list reveal" data-delay="320">
           ${items.map((item, index) => `
-            <div class="race-row reveal" data-delay="${320 + index * 90}">
+            <div class="race-row">
               <div class="race-row__head">
                 <span class="race-row__place">${index + 1}</span>
                 <span class="race-row__label">${escapeHtml(item.label)}</span>
                 <span class="race-row__meta">${escapeHtml(item.meta)}</span>
               </div>
-              <div class="race-row__track">
-                <div class="race-row__fill" style="--progress:${Math.max(0.12, item.progress)}"></div>
+              <div class="race-row__bar">
+                <div class="race-row__track">
+                  <div class="race-row__fill" style="--progress:${Math.max(0.12, item.progress)}"></div>
+                </div>
+                <div class="race-row__value">${escapeHtml(item.value)}</div>
               </div>
-              <div class="race-row__value">${escapeHtml(item.value)}</div>
             </div>
           `).join('')}
         </div>
@@ -822,7 +824,6 @@ function fxLayer() {
   return `
     <div class="fx fx--halo reveal" data-delay="0"></div>
     <div class="fx fx--ribbon reveal" data-delay="40"></div>
-    <div class="fx fx--grain reveal" data-delay="20"></div>
   `;
 }
 
