@@ -515,6 +515,10 @@ function renderFlashbackMessageSlide({ theme, kicker, title, body, flashbackId, 
   return createFlashbackSlide({ theme, kicker, title, body, flashbackId, dateRange });
 }
 
+function renderTimelineSlide({ theme, kicker, title, body, items = [] }) {
+  return createTimelineSlide({ theme, kicker, title, body, items });
+}
+
 function renderFinaleSlide({ kicker, headline, subline, statement }) {
   return {
     html: `
