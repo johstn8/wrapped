@@ -490,10 +490,6 @@ function renderIdentitySlide({ kicker, title, chips = [], body = '' }) {
   };
 }
 
-function renderTimelineSlide({ theme = 'base', kicker, title, body, items = [] }) {
-  return createTimelineSlide({ theme, kicker, title, body, items });
-}
-
 function renderQuizSlide({ kicker, title, body, quizId, options, answer, quote }) {
   return createQuizBase({ theme: 'base', kicker, title, body: `„${quote}“ · ${body}`, quizId, options, answer, explanation: '' });
 }
