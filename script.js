@@ -39,7 +39,6 @@ async function init() {
 function cacheElements() {
   els.app = document.getElementById('app');
   els.homeScreen = document.getElementById('homeScreen');
-  els.homeSummary = document.getElementById('homeSummary');
   els.storyGrid = document.getElementById('storyGrid');
   els.storyPlayer = document.getElementById('storyPlayer');
   els.progressBars = document.getElementById('progressBars');
@@ -151,8 +150,6 @@ function getActiveStory() {
 }
 
 function renderHome() {
-  els.homeSummary.textContent = 'Kuratiert in Kapitel-Momenten mit Motion-Reveals.';
-
   els.storyGrid.innerHTML = state.stories.map((story) => `
     <button class="story-bubble chapter-shell" data-story-id="${story.id}" data-theme="${story.theme}" data-style="${story.homeStyle || ''}" type="button" aria-label="${story.title} öffnen">
       <div class="story-bubble__ring">
@@ -321,7 +318,7 @@ function buildStories(data) {
 
   const totalMessages = formatNumber(summary.total_messages);
   const wrmCount = wrmNumbers['WRMs listed on main page'] || '91';
-  const strongestMonthLabel = monthlyPeak.month || '2025-10';
+  const strongestMonthLabel = formatMonthLabel(monthlyPeak.month || '2025-10');
 
   return [
     {
@@ -338,7 +335,12 @@ function buildStories(data) {
         renderHeroStatSlide({ kicker: 'Total volume', number: totalMessages, label: 'Nachrichten insgesamt', body: `${summary.active_days || 957} aktive Tage.` }),
         renderHeroStatSlide({ kicker: 'Always on', number: String(summary.active_days || 957), label: 'aktive Tage', body: `${summary.longest_streak_days || 169} Tage am Stück von ${formatDate(summary.longest_streak_start)} bis ${formatDate(summary.longest_streak_end)}.` }),
         renderTopRankSlide({ kicker: 'Balance', title: 'Fast exakt 50/50', rows: (summary.message_balance || []).map((row) => ({ label: row.sender === 'Julian RR' ? 'Julian' : 'Johann', value: `${Math.round((row.share_pct || 0) * 1000) / 10}%` })) }),
-        renderClaimSlide({ kicker: 'Prime window', title: summary.avg_daily_peak_2h_window_label || '18:18–20:18', body: 'Euer stärkstes Zeitfenster lag konstant am Abend.' }),
+        renderStackedHighlightSlide({
+          kicker: 'Stärkstes Zeitfenster',
+          title: 'Prime Window',
+          value: summary.avg_daily_peak_2h_window_label || '18:18–20:18',
+          body: 'Hier wart ihr meistens gleichzeitig aktiv.',
+        }),
         renderClaimSlide({ kicker: 'Shift', title: 'This was never just chat.', body: 'It became a shared system.' }),
       ],
     },
@@ -353,10 +355,22 @@ function buildStories(data) {
       homeBadge: '◍',
       slides: [
         renderHeroStatSlide({ kicker: 'Biggest day', number: formatNumber(topDay.messages || 0), label: formatDate(topDay.date), body: `${topDay.dominant_topic || 'Peak topic'} · ${(topDay.duration_hours || 0).toFixed(1)}h aktiv.` }),
-        renderClaimSlide({ kicker: 'Strongest month', title: strongestMonthLabel, body: `${formatNumber(monthlyPeak.total_messages || 0)} Nachrichten in einem Monat.` }),
+        renderStackedHighlightSlide({
+          kicker: 'Strongest month',
+          title: strongestMonthLabel,
+          value: formatNumber(monthlyPeak.total_messages || 0),
+          valueLabel: 'Nachrichten',
+          body: 'Der stärkste Monats-Peak mit Message-Rain im Hintergrund.',
+          withRain: true,
+        }),
         renderTopRankSlide({ kicker: 'Top chat days', title: 'Marathon sessions', rows: [topDay, topDay2].filter(Boolean).map((entry) => ({ label: formatDate(entry.date), value: formatNumber(entry.messages || 0), note: `${entry.dominant_topic || 'mixed'}` })) }),
         renderClaimSlide({ kicker: 'Quickdraw', title: `${quickWindow?.JulianRR_median_sec || 57}s vs ${quickWindow?.johann_median_sec || 62}s`, body: 'Antworten im <=3h-Fenster waren fast live.' }),
-        renderHeroStatSlide({ kicker: 'Voice notes', number: formatNumber(voiceNotes.total_voice_notes || 1674), label: 'Audios', body: `Peak: ${voiceNotes.peak_month || '2025-11'} · ${formatNumber(voiceNotes.peak_month_count || 0)}.` }),
+        renderHeroStatSlide({
+          kicker: 'Voice notes',
+          number: `🔊 ${formatNumber(voiceNotes.total_voice_notes || 1674)}`,
+          label: 'gesendete Audios',
+          body: `Audio-Peak: ${formatMonthLabel(voiceNotes.peak_month || '2025-11')} · ${formatNumber(voiceNotes.peak_month_count || 0)} Audios.`,
+        }),
         renderTopRankSlide({ kicker: 'Media mix', title: 'Mehr als Text', rows: mediaTop.map((row) => ({ label: mediaTypeLabel(row.msg_type), value: formatNumber(row.total) })) }),
         renderClaimSlide({ kicker: 'Transition', title: 'Then your own language kicked in.', body: '' }),
       ],
@@ -392,10 +406,15 @@ function buildStories(data) {
       homeBadge: '◌',
       slides: [
         renderClaimSlide({ kicker: 'Phase intro', title: 'Every era had its own energy.', body: 'Setup → Leistung → System → Außenwirkung.' }),
-        renderTimelineSlide({ theme: 'violet', kicker: 'Friendship eras', title: 'Topic evolution', body: 'Die Timeline zeigt klare Wechsel.', items: eras.map((era) => ({ range: `${era.start_month} → ${era.end_month}`, title: era.era_label, body: `${formatNumber(era.messages_in_era || 0)} messages` })) }),
-        renderTopRankSlide({ kicker: 'Era 1', title: eras[0]?.era_label || 'Setup', rows: [{ label: 'Zeitraum', value: eras[0] ? `${eras[0].start_month} → ${eras[0].end_month}` : '-' }] }),
-        renderTopRankSlide({ kicker: 'Era 2', title: eras[1]?.era_label || 'Abi Mode', rows: [{ label: 'Zeitraum', value: eras[1] ? `${eras[1].start_month} → ${eras[1].end_month}` : '-' }] }),
-        renderTopRankSlide({ kicker: 'Era 3', title: eras[2]?.era_label || 'WRM System', rows: [{ label: 'Zeitraum', value: eras[2] ? `${eras[2].start_month} → ${eras[2].end_month}` : '-' }] }),
+        renderRaceSlide({
+          kicker: 'Era race',
+          title: 'Phasen im Wettrennen',
+          body: 'Wie bei Wrapped: klare Sequenz statt isolierte Einzelkarten.',
+          items: eras.map((era) => ({
+            title: era.era_label,
+            meta: `${formatMonthLabel(era.start_month)} → ${formatMonthLabel(era.end_month)} · ${formatNumber(era.messages_in_era || 0)} Nachrichten`,
+          })),
+        }),
         renderClaimSlide({ kicker: 'Topic bridge', title: 'Out of chat, a system emerged.', body: '' }),
       ],
     },
@@ -423,13 +442,20 @@ function buildStories(data) {
       homeCaption: 'play',
       homeBadge: '?',
       slides: [
-        renderQuizSlide({ kicker: 'QUIZ', title: 'Wer hat das geschrieben?', body: 'Round 1', quizId: quoteGame[0]?.id || 'q1', options: ['Johann', 'Julian RR'], answer: quoteGame[0]?.answer || 'Johann', quote: quoteGame[0]?.quote || '...' }),
-        renderQuizRevealSlide({ kicker: 'Reveal', title: quoteGame[0]?.answer || 'Johann', body: quoteGame[0]?.note || '' }),
-        renderQuizSlide({ kicker: 'QUIZ', title: 'Wer hat das geschrieben?', body: 'Round 2', quizId: quoteGame[1]?.id || 'q2', options: ['Johann', 'Julian RR'], answer: quoteGame[1]?.answer || 'Julian RR', quote: quoteGame[1]?.quote || '...' }),
-        renderQuizRevealSlide({ kicker: 'Reveal', title: quoteGame[1]?.answer || 'Julian RR', body: quoteGame[1]?.note || '' }),
+        renderQuizSlide({ kicker: 'QUIZ', title: 'Wer hat das geschrieben?', body: quoteGame[0]?.note || '', quizId: quoteGame[0]?.id || 'q1', options: ['Johann', 'Julian RR'], answer: quoteGame[0]?.answer || 'Johann', quote: quoteGame[0]?.quote || '...' }),
+        renderQuizSlide({ kicker: 'QUIZ', title: 'Wer hat das geschrieben?', body: quoteGame[1]?.note || '', quizId: quoteGame[1]?.id || 'q2', options: ['Johann', 'Julian RR'], answer: quoteGame[1]?.answer || 'Julian RR', quote: quoteGame[1]?.quote || '...' }),
         ...wrmQuizzes.flatMap((quiz, index) => [
-          renderQuizSlide({ kicker: 'WRM QUIZ', title: 'Welche WRM-Nummer war das?', body: quiz.notes.join(' · '), quizId: `wrm-${index}`, options: ['WRM 23', 'WRM 51', 'WRM 75'], answer: quiz.wrm, quote: 'Pick one' }),
-          renderQuizRevealSlide({ kicker: 'Reveal', title: quiz.wrm, body: quiz.date }),
+          createWrmQuizSlide({
+            theme: 'base',
+            kicker: 'WRM QUIZ',
+            title: 'Welche WRM-Nummer war das?',
+            body: quiz.date || '',
+            notes: quiz.notes.filter(Boolean),
+            quizId: `wrm-${index}`,
+            options: ['WRM 23', 'WRM 51', 'WRM 75'],
+            answer: quiz.wrm,
+            explanation: '',
+          }),
         ]),
       ],
     },
@@ -519,21 +545,7 @@ function renderIdentitySlide({ kicker, title, chips = [], body = '' }) {
 }
 
 function renderQuizSlide({ kicker, title, body, quizId, options, answer, quote }) {
-  return createQuizBase({ theme: 'base', kicker, title, body: `„${quote}“ · ${body}`, quizId, options, answer, explanation: '' });
-}
-
-function renderQuizRevealSlide({ kicker, title, body }) {
-  return {
-    html: `
-      <div class="story-slide__bg"></div>
-      <div class="story-slide__inner story-layout--center quiz-reveal story-slide--cinematic">
-        <div class="fx fx--halo reveal reveal--1"></div>
-        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
-        <div class="hero-number">${escapeHtml(title === 'Julian RR' ? 'Julian' : title)}</div>
-        <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
-      </div>
-    `,
-  };
+  return createQuizBase({ theme: 'base', kicker, title, body, quizId, options, answer, explanation: '', quote });
 }
 
 function renderFlashbackIntroSlide({ kicker, title, body }) {
@@ -557,6 +569,45 @@ function renderFinaleSlide({ kicker, headline, subline, statement }) {
         <div class="hero-number">${escapeHtml(headline)}</div>
         <p class="hero-label">${escapeHtml(subline)}</p>
         <h3 class="story-title story-title--medium">${escapeHtml(statement)}</h3>
+      </div>
+    `,
+  };
+}
+
+function renderStackedHighlightSlide({ kicker, title, value, valueLabel = '', body = '', withRain = false }) {
+  return {
+    html: `
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-layout--center story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+        <h3 class="story-title reveal reveal--3">${escapeHtml(title)}</h3>
+        <div class="hero-number hero-number--stacked reveal reveal-up reveal--4">${escapeHtml(value)}</div>
+        ${valueLabel ? `<p class="hero-label reveal reveal--5">${escapeHtml(valueLabel)}</p>` : ''}
+        <p class="story-lead reveal reveal--6">${escapeHtml(body)}</p>
+        ${withRain ? `<div class="stat-rain" aria-hidden="true">${Array.from({ length: 16 }).map((_, index) => `<span style="left:${(index * 6.4) % 100}%;animation-duration:${3.6 + (index % 5) * 0.7}s;animation-delay:-${index * 0.5}s;">✉︎</span>`).join('')}</div>` : ''}
+      </div>
+    `,
+  };
+}
+
+function renderRaceSlide({ kicker, title, body, items = [] }) {
+  return {
+    html: `
+      <div class="story-slide__bg reveal reveal--1"></div>
+      <div class="story-slide__inner story-slide--cinematic">
+        <div class="fx fx--halo reveal reveal--1"></div>
+        <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
+        <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
+        <p class="story-lead reveal reveal--4">${escapeHtml(body)}</p>
+        <div class="race-list">
+          ${items.slice(0, 4).map((item, index) => `
+            <article class="race-item reveal reveal-up" data-reveal-step="${index + 5}">
+              <p class="race-item__title">${escapeHtml(item.title)}</p>
+              <p class="race-item__meta">${escapeHtml(item.meta)}</p>
+            </article>
+          `).join('')}
+        </div>
       </div>
     `,
   };
@@ -920,11 +971,11 @@ function createWrmQuizSlide({ theme, kicker, title, body, notes, quizId, options
     answer,
     options,
     explanation,
-    extraHtml: `<div class="note-list" style="margin-top:16px;">${notes.map((note) => `<div class="note-pill">${escapeHtml(note)}</div>`).join('')}</div>`,
+    extraHtml: `<div class="note-checklist">${notes.map((note) => `<div class="note-check">${escapeHtml(note)}</div>`).join('')}</div>`,
   });
 }
 
-function createQuizBase({ theme, kicker, title, body, quizId, options, answer, explanation, extraHtml = '' }) {
+function createQuizBase({ theme, kicker, title, body, quizId, options, answer, explanation, extraHtml = '', quote = '' }) {
   const feedbackText = answer === 'Julian RR' || answer === 'Johann'
     ? `Richtig ist: ${answer === 'Julian RR' ? 'Julian' : 'Johann'}. ${explanation}`
     : `Richtig ist: ${answer}. ${explanation}`;
@@ -939,7 +990,8 @@ function createQuizBase({ theme, kicker, title, body, quizId, options, answer, e
         <div class="story-slide__top">
           <p class="story-kicker reveal reveal--2">${escapeHtml(kicker)}</p>
           <h3 class="story-title story-title--medium reveal reveal--3">${escapeHtml(title)}</h3>
-          <p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>
+          ${quote ? `<div class="quiz-quote reveal reveal--4">„${escapeHtml(quote)}“</div>` : ''}
+          ${body ? `<p class="story-lead reveal reveal--5">${escapeHtml(body)}</p>` : ''}
           ${extraHtml}
         </div>
         <div class="choice-grid">
@@ -1173,6 +1225,13 @@ function formatDateTime(dateString) {
   return new Intl.DateTimeFormat('de-DE', {
     day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
   }).format(date);
+}
+
+function formatMonthLabel(monthString) {
+  if (!monthString) return '';
+  const date = new Date(`${monthString}-01T00:00:00`);
+  if (Number.isNaN(date.getTime())) return monthString;
+  return new Intl.DateTimeFormat('de-DE', { month: 'long', year: 'numeric' }).format(date);
 }
 
 function clamp(value, min, max) {
