@@ -8917,6 +8917,41 @@
       "date_start": "2023-03-16 13:35:32",
       "date_end": "2023-03-18 12:02:33",
       "why_it_is_fun": "Great-Barrier-Reef-Vibes, Herr-Miesel-2.0-Witz und Australien als völlig eigene Nebenwelt."
+    },
+    {
+      "flashback_id": "FB9",
+      "title": "Blauer-Haken-Fantasie",
+      "date_start": "2024-03-05 20:55:49",
+      "date_end": "2024-03-05 21:00:44",
+      "why_it_is_fun": "Vom ‚losten Account‘ zu ‚Irgendwann blauer Haken‘ in unter fünf Minuten."
+    },
+    {
+      "flashback_id": "FB10",
+      "title": "Hype-/Vibe-Namenslabor",
+      "date_start": "2024-03-15 20:58:16",
+      "date_end": "2024-03-15 21:14:14",
+      "why_it_is_fun": "Namensideen kippen in völlige Entscheidungsüberforderung, Bushido-Lore und Erwachsenenansprache."
+    },
+    {
+      "flashback_id": "FB8",
+      "title": "Das Geschenk / Manifest / Harvard",
+      "date_start": "2024-10-28 21:55:34",
+      "date_end": "2024-10-28 22:05:40",
+      "why_it_is_fun": "Aus einer Mail wird in Minuten ein Manifest, ein Harvard-Moment und der Titel ‚Tisch-Spender‘."
+    },
+    {
+      "flashback_id": "FB7",
+      "title": "Zeugnis-Explosion / 1,0-Tag",
+      "date_start": "2025-01-09 16:59:28",
+      "date_end": "2025-01-09 17:08:39",
+      "why_it_is_fun": "Kompletter Ausrast-Moment über Noten, 1,0 und ‚mehr Vornamen als 14-Punkte-Fächer‘."
+    },
+    {
+      "flashback_id": "FB11",
+      "title": "AI-Hymne",
+      "date_start": "2025-02-18 17:25:48",
+      "date_end": "2025-02-18 21:02:40",
+      "why_it_is_fun": "Eine neue Hymne wird entdeckt, sofort glorifiziert und dann staunend der KI zugeschrieben."
     }
   ],
   "flashback_messages": [
@@ -10564,6 +10599,335 @@
       "sender": "Julian RR",
       "msg_type": "text",
       "message": "Stark stark"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 16:59:28",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Wahnsinn Johann"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 16:59:52",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Extrem stolz auf dich!!!"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:00:07",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Geil man. Genau da müssen wir weiter machen. Kein Stück nachlassen"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:01:52",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Alles 15 und einmal 14😂"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:05:14",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Jaa mann maschine!!!"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:05:59",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Du hast mehr Vornamen als 13 Punkte Fächer auf dein Zeugnis"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:06:15",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Nein sogar mehr Vornamen als 14 Punkte Fächer"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:07:06",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Einfach 1,0 bei dir!!!"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:07:24",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "MASCHINE 🏍️"
+    },
+    {
+      "flashback_id": "FB7",
+      "datetime": "2025-01-09 17:08:39",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Herrlich alles😍"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 21:55:34",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Hahahah wie geil"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 21:56:14",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Hahahaha sie ist so geil"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:00:11",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "„Das Geschenk“ 🎁🚀"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:02:45",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Das ist das beste was ich seit langen gesehen habe"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:02:55",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Und ich hab nh Idee wie wir Profit draufschlagen können"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:02:57",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Ein Manifest 📃"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:04:06",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Ein himmlisches Geschenk"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:05:05",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Ey da kann man sich ja eigentlich perfekt auch in der Kirche engagieren oder?"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:05:15",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Stichwort soziales = harvard"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:05:31",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Das packen wir in Lebenslauf"
+    },
+    {
+      "flashback_id": "FB8",
+      "datetime": "2024-10-28 22:05:40",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "„Tisch-Spender“"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:55:49",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Weil so kannst du das halt net von einem Rotz-Acc unterscheiden yk"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:56:10",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Ich würd dann denken das ist ein komplett loster account"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:56:57",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Hab auch schon überlegt vielleicht zu dem Account zu bekennen dass wir sagen wir stecken dahinter"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:58:34",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Ja das wird geil"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:58:37",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Hab’s im Blut"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:58:44",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Irgendwann blauer Haken"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:59:10",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Lass kaufen"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 20:59:21",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "monatlich"
+    },
+    {
+      "flashback_id": "FB9",
+      "datetime": "2024-03-05 21:00:44",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Leak mal wie macht man eigene sticker?"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 20:58:16",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Gemeinsam: \n- Fallout\n- ⁠Vibe\n- ⁠Hype\n- ⁠Fresh"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:01:00",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Du entscheidest"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:02:28",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "beide"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:02:37",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Ist die beste Entscheidung"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:11:33",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Digga ich will für alles abstimmen"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:12:03",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Du bist erwachsen"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:12:09",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Kannst nicht alles haben"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:13:52",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Das ist nen Bushido Track Hahahah"
+    },
+    {
+      "flashback_id": "FB10",
+      "datetime": "2024-03-15 21:14:14",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Wie geil deswegen"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:25:48",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "HAHAHAHAHAHAHAHAHAS"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:26:47",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Hahahahaa neue hymne"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:27:14",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "geeeil man wie hast du das gemacht?"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:29:28",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Und sehr geiler song hahaha"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:33:02",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "Hahahah AI"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 17:33:03",
+      "sender": "Julian RR",
+      "msg_type": "text",
+      "message": "So geil"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 21:02:17",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "Die sind ehrlich gar nicht so kacke"
+    },
+    {
+      "flashback_id": "FB11",
+      "datetime": "2025-02-18 21:02:40",
+      "sender": "johann",
+      "msg_type": "text",
+      "message": "voll nice, das die ki das hinkriegt kraaass"
     }
   ],
   "quote_game": [
@@ -10606,6 +10970,46 @@
     {
       "quote_id": "Q10",
       "quote": "Ich seh dich morgen in dem Nice Schwanz Bro T-shirt"
+    },
+    {
+      "quote_id": "Q11",
+      "quote": "Du hast mehr Vornamen als 14 Punkte Fächer"
+    },
+    {
+      "quote_id": "Q12",
+      "quote": "Das ist das beste was ich seit langen gesehen habe"
+    },
+    {
+      "quote_id": "Q13",
+      "quote": "Ein Manifest 📃"
+    },
+    {
+      "quote_id": "Q14",
+      "quote": "Irgendwann blauer Haken"
+    },
+    {
+      "quote_id": "Q15",
+      "quote": "Du bist erwachsen"
+    },
+    {
+      "quote_id": "Q16",
+      "quote": "Kannst nicht alles haben"
+    },
+    {
+      "quote_id": "Q17",
+      "quote": "Das ist nen Bushido Track Hahahah"
+    },
+    {
+      "quote_id": "Q18",
+      "quote": "Stichwort soziales = harvard"
+    },
+    {
+      "quote_id": "Q19",
+      "quote": "„Tisch-Spender“"
+    },
+    {
+      "quote_id": "Q20",
+      "quote": "Bin nur Teilzeit deine 5. pk mitglied 😢"
     }
   ],
   "quote_answers": [
@@ -10668,6 +11072,66 @@
       "quote": "Ich seh dich morgen in dem Nice Schwanz Bro T-shirt",
       "true_sender": "johann",
       "note": "Komplett absurde Freundschaftszeile"
+    },
+    {
+      "quote_id": "Q11",
+      "quote": "Du hast mehr Vornamen als 14 Punkte Fächer",
+      "true_sender": "Julian RR",
+      "note": "Zeugnis-/1,0-Explosion"
+    },
+    {
+      "quote_id": "Q12",
+      "quote": "Das ist das beste was ich seit langen gesehen habe",
+      "true_sender": "Julian RR",
+      "note": "Das-Geschenk-/Manifest-Moment"
+    },
+    {
+      "quote_id": "Q13",
+      "quote": "Ein Manifest 📃",
+      "true_sender": "johann",
+      "note": "sofortige Eskalation eines absurden Plans"
+    },
+    {
+      "quote_id": "Q14",
+      "quote": "Irgendwann blauer Haken",
+      "true_sender": "Julian RR",
+      "note": "Social-Media-Prophezeiung"
+    },
+    {
+      "quote_id": "Q15",
+      "quote": "Du bist erwachsen",
+      "true_sender": "Julian RR",
+      "note": "Namensfindung / Entscheidungspanik"
+    },
+    {
+      "quote_id": "Q16",
+      "quote": "Kannst nicht alles haben",
+      "true_sender": "Julian RR",
+      "note": "gleicher Moment, noch härter"
+    },
+    {
+      "quote_id": "Q17",
+      "quote": "Das ist nen Bushido Track Hahahah",
+      "true_sender": "Julian RR",
+      "note": "Fallout-Diskussion"
+    },
+    {
+      "quote_id": "Q18",
+      "quote": "Stichwort soziales = harvard",
+      "true_sender": "johann",
+      "note": "Kirchen- / Lebenslauf-Sidequest"
+    },
+    {
+      "quote_id": "Q19",
+      "quote": "„Tisch-Spender“",
+      "true_sender": "Julian RR",
+      "note": "Titelvergabe im Manifest-Flashback"
+    },
+    {
+      "quote_id": "Q20",
+      "quote": "Bin nur Teilzeit deine 5. pk mitglied 😢",
+      "true_sender": "johann",
+      "note": "5.-PK-Insider / Drive-Zugang fehlt"
     }
   ],
   "extra_categories": [
@@ -13663,6 +14127,36 @@
       "2026-02-01",
       "Quiz-Karte: 'Welche WRM-Nummer war das?'",
       "WRM anhand Debatte+Verein+späte Abi-/Career-Phase erraten"
+    ],
+    [
+      "Notes-before quiz D",
+      "Schülersprecher nächstes Jahr besprechen",
+      "MS-Teams-PB-Bild-Aufgabe löschen?",
+      "German-Exam-Talk mit Mr. Herzig / Motivation nach den Herbstferien",
+      "WRM 11",
+      "2024-11-10",
+      "Quiz-Karte: 'Welche WRM-Nummer war das?'",
+      "frühe 11.-Klasse: Schülersprecher noch Zukunft, Motivation nach den Herbstferien"
+    ],
+    [
+      "Notes-before quiz E",
+      "5. PK von Anfang aufbauen",
+      "Notion-Meeting-Tool checken",
+      "Englisch verbessern + Praktika",
+      "WRM 38",
+      "2025-05-18",
+      "Quiz-Karte: 'Welche WRM-Nummer war das?'",
+      "5.-PK-/Notion-/Praktika-Phase im späten ersten Abi-Jahr"
+    ],
+    [
+      "Notes-before quiz F",
+      "Sehr schnelles und effizientes WRM",
+      "WRM-Cover-Picture",
+      "Dr.-Olaf-Berlien-/Karriere-Frage + LK-Materialpool/Exam-Data für Schülersprecher",
+      "WRM 63",
+      "2025-11-09",
+      "Quiz-Karte: 'Welche WRM-Nummer war das?'",
+      "verdichtete Spätphase: Schülersprecher + Karriere + 5. PK gleichzeitig"
     ]
   ],
   "wrm_notes_quiz_answers": [
@@ -13685,6 +14179,27 @@
       "WRM 75",
       "2026-02-01",
       "Militärdebatte + Verein + Snapchat-Sidequest = späte, sehr verdichtete Phase",
+      "Auflösung direkt nach der Quiz-Karte"
+    ],
+    [
+      "Notes-before quiz D",
+      "WRM 11",
+      "2024-11-10",
+      "Schülersprecher noch als Zukunftsfrage + Herzig-/Motivationspunkt direkt nach den Herbstferien",
+      "Auflösung direkt nach der Quiz-Karte"
+    ],
+    [
+      "Notes-before quiz E",
+      "WRM 38",
+      "2025-05-18",
+      "5. PK neu von vorn + Notion-Meeting-Tool + Englisch + Praktika",
+      "Auflösung direkt nach der Quiz-Karte"
+    ],
+    [
+      "Notes-before quiz F",
+      "WRM 63",
+      "2025-11-09",
+      "Karriere, WRM-Cover, Schülersprecher-Daten und 5. PK zugleich",
       "Auflösung direkt nach der Quiz-Karte"
     ]
   ],
