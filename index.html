@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="de">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#090909" />
+    <title>Freundschafts-Wrapped</title>
+    <meta
+      name="description"
+      content="Ein privates Friendship Wrapped als mobile Story-Experience auf Basis von WhatsApp- und WRM-Daten."
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Space+Grotesk:wght@500;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="app" class="app app--loading">
+      <div id="orientationGuard" class="orientation-guard" aria-hidden="true">
+        <div class="orientation-card">
+          <div class="rotate-device" aria-hidden="true">
+            <div class="rotate-device__phone"></div>
+            <div class="rotate-device__arrow">↺</div>
+          </div>
+          <h2>Bitte im Hochformat öffnen</h2>
+          <p>Dieses Wrapped ist als vertikale Story gebaut.</p>
+        </div>
+      </div>
+
+      <main id="homeScreen" class="screen screen--home">
+        <div class="home-shell">
+          <div class="home-bg home-bg--1"></div>
+          <div class="home-bg home-bg--2"></div>
+          <header class="home-header">
+            <p class="eyebrow">Freundschafts-Wrapped</p>
+            <h1>Eine Freundschaft als Rückblick.</h1>
+            <p id="homeLead" class="home-lead">Die Daten werden geladen …</p>
+          </header>
+
+          <section class="chapter-section">
+            <div class="chapter-section__head">
+              <p class="eyebrow eyebrow--muted">Kapitel</p>
+              <p class="chapter-section__hint">Tippen zum Starten</p>
+            </div>
+            <div id="storyGrid" class="story-grid" aria-label="Kapitelübersicht"></div>
+          </section>
+        </div>
+      </main>
+
+      <section id="storyPlayer" class="story-player hidden" aria-live="polite">
+        <div class="story-player__bg"></div>
+        <div class="story-player__veil story-player__veil--a"></div>
+        <div class="story-player__veil story-player__veil--b"></div>
+
+        <div class="story-player__chrome">
+          <div id="progressBars" class="progress-bars"></div>
+          <header class="player-header">
+            <div class="player-header__meta">
+              <p id="playerEyebrow" class="player-header__eyebrow">Kapitel</p>
+              <h2 id="playerTitle">Titel</h2>
+            </div>
+            <div class="player-header__actions">
+              <p id="playerCounter" class="player-counter">1 / 1</p>
+              <button id="closePlayerButton" class="icon-button" type="button" aria-label="Schließen">✕</button>
+            </div>
+          </header>
+        </div>
+
+        <div id="storyFrame" class="story-frame">
+          <div id="storySlide" class="story-slide"></div>
+          <button id="tapLeft" class="tap-zone tap-zone--left" type="button" aria-label="Zurück"></button>
+          <button id="tapRight" class="tap-zone tap-zone--right" type="button" aria-label="Weiter"></button>
+        </div>
+      </section>
+
+      <section id="loadingScreen" class="screen screen--loading">
+        <div class="loader-card">
+          <div class="loader-orb"></div>
+          <p class="eyebrow">Rückblick lädt</p>
+          <h2>Die Daten werden inszeniert …</h2>
+        </div>
+      </section>
+
+      <section id="errorScreen" class="screen screen--error hidden">
+        <div class="error-card">
+          <p class="eyebrow eyebrow--muted">Fehler beim Laden</p>
+          <h2>Die JSON konnte nicht geladen werden.</h2>
+          <p>Prüfe bitte, ob <code>data/friendship_wrapped_data.json</code> im Repository liegt und die Seite über GitHub Pages oder einen lokalen Server läuft.</p>
+        </div>
+      </section>
+    </div>
+
+    <script src="script.js" defer></script>
+  </body>
+</html>
